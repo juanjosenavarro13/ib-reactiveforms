@@ -1,0 +1,7 @@
+<div class="container">
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" [formControl]="nombre" />
+    <p>Valor: {{ nombre.value }}</p>
+    <p>Estado: {{ nombre.status }}</p>
+</div>

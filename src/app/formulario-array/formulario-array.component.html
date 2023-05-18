@@ -1,0 +1,170 @@
+<div class="container">
+  <form [formGroup]="formulario" class="mb-4" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-6" formGroupName="persona">
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid':
+                !formulario.get('persona')?.get('nombre')?.valid &&
+                formulario.get('persona')?.get('nombre')?.touched,
+              'is-valid': formulario.get('persona')?.get('nombre')?.valid
+            }"
+            formControlName="nombre"
+          />
+          <div class="text-danger">
+            <p
+              *ngIf="formulario.get('persona')?.get('nombre')?.errors?.['required'] && formulario.get('persona')?.get('nombre')?.touched"
+            >
+              El nombre es un campo requerido.
+            </p>
+            <p
+              *ngIf="formulario.get('persona')?.get('nombre')?.errors?.['minlength'] && formulario.get('persona')?.get('nombre')?.touched"
+            >
+              El nombre necesita un minimo de
+              {{formulario.get('persona')?.get('nombre')?.errors?.['minlength'].requiredLength}}
+              caracteres.
+            </p>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Apellidos</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': !apellidos.valid && apellidos.touched,
+              'is-valid': apellidos.valid
+            }"
+            formControlName="apellidos"
+          />
+          <div class="text-danger">
+            <p *ngIf="apellidos.errors?.['required'] && apellidos.touched">
+              El nombre es un campo requerido.
+            </p>
+            <p *ngIf="apellidos.errors?.['minlength'] && apellidos.touched">
+              El nombre necesita un minimo de
+              {{apellidos.errors?.['minlength'].requiredLength}}
+              caracteres.
+            </p>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">DNI</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': !dni.valid && dni.touched,
+              'is-valid': dni.valid
+            }"
+            formControlName="dni"
+          />
+          <div class="text-danger">
+            <p *ngIf="dni.errors?.['required'] && dni.touched">
+              El nombre es un campo requerido.
+            </p>
+            <p
+              *ngIf="dni.errors?.['dniValido'] && dni.touched && !dni.errors?.['required']"
+            >
+              El DNI es invalido.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6" formArrayName="direcciones">
+        <div
+          class="mb-5"
+          *ngFor="let dir of direcciones.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <p class="text-center">
+            <strong>Direccion {{ i + 1 }}</strong>
+          </p>
+          <label class="form-label">Ciudad</label>
+          <input type="text" class="form-control" [ngClass]="{
+            'is-invalid': !direcciones.get(i.toString())?.get('ciudad')?.valid && direcciones.get(i.toString())?.get('ciudad')?.touched,
+            'is-valid': direcciones.get(i.toString())?.get('ciudad')?.valid
+          }"
+          formControlName="ciudad" />
+          <div class="text-danger">
+            <p
+              *ngIf="direcciones.get(i.toString())?.get('ciudad')?.errors?.['required'] && direcciones.get(i.toString())?.get('ciudad')?.touched"
+            >
+              La ciudad es requerida.
+            </p>
+          </div>
+          <label class="form-label">calle</label>
+          <input type="text" class="form-control" [ngClass]="{
+            'is-invalid': !direcciones.get(i.toString())?.get('calle')?.valid && direcciones.get(i.toString())?.get('calle')?.touched,
+            'is-valid': direcciones.get(i.toString())?.get('calle')?.valid
+          }"
+          formControlName="calle" />
+          <div class="text-danger">
+            <p
+              *ngIf="direcciones.get(i.toString())?.get('calle')?.errors?.['required'] && direcciones.get(i.toString())?.get('calle')?.touched"
+            >
+              La calle es requerida.
+            </p>
+          </div>
+          <label class="form-label">numero</label>
+          <input type="number" min="1" class="form-control" [ngClass]="{
+            'is-invalid': !direcciones.get(i.toString())?.get('numero')?.valid && direcciones.get(i.toString())?.get('numero')?.touched,
+            'is-valid': direcciones.get(i.toString())?.get('numero')?.valid
+          }"
+          formControlName="numero" />
+          <div class="text-danger">
+            <p
+              *ngIf="direcciones.get(i.toString())?.get('numero')?.errors?.['required'] && direcciones.get(i.toString())?.get('numero')?.touched"
+            >
+              El numero es requerido.
+            </p>
+          </div>
+          <button class="btn btn-dark m-1" type="button" (click)="eliminarDireccion(i)">
+            Eliminar
+          </button>
+          <button class="btn btn-dark m-1" type="button" (click)="autocompletarDireccion(i)">
+            Autocompletar
+          </button>
+        </div>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-dark m-1" type="submit">Enviar normal</button>
+        <button
+          class="btn btn-dark m-1"
+          type="submit"
+          [disabled]="!formulario.valid"
+        >
+          Enviar (disabled)
+        </button>
+        <button
+          class="btn btn-dark m-1"
+          type="button"
+          (click)="cambiarNombre()"
+        >
+          Cambiar nombre
+        </button>
+        <button class="btn btn-dark m-1" type="button" (click)="autoRellenar()">
+          autoRellenar
+        </button>
+        <button
+          class="btn btn-dark m-1"
+          type="button"
+          (click)="agregarDireccion()"
+        >
+          Agregar direccion
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="border border-danger p-2">
+    <p><b>estado general:</b> {{ formulario.status | json }}</p>
+    <p><b>estado persona:</b> {{ persona.status | json }}</p>
+    <p><b>estado direcciones:</b> {{ direcciones.status | json }}</p>
+    <p><b>valor:</b> {{ formulario.value | json }}</p>
+  </div>
+</div>
