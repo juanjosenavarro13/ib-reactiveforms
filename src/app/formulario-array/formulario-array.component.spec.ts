@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormularioArrayComponent } from './formulario-array.component';
@@ -8,7 +9,8 @@ describe('FormularioArrayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FormularioArrayComponent ]
+      declarations: [ FormularioArrayComponent ],
+      imports: [ReactiveFormsModule]
     })
     .compileComponents();
 
